@@ -115,3 +115,9 @@ Middleman::Extensions.register :automatic_alt_tags do
   require 'middleman-core/extensions/automatic_alt_tags'
   Middleman::Extensions::AutomaticAltTags
 end
+
+# SourceMaps configures renderers to output sourcemap information.
+Middleman::Extensions.register :source_maps do
+  require 'middleman-core/extensions/source_maps'
+  Middleman::Extensions::SourceMaps
+end

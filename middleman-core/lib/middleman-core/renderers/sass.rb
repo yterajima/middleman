@@ -83,10 +83,29 @@ module Middleman
         # @return [String]
         def evaluate(context, _)
           @context ||= context
-          @engine = ::Sass::Engine.new(data, sass_options)
+
+          opts = sass_options
+          
+          p = opts[:css_filename]
+          relative_path = Pathname(p).relative_path_from(Pathname(@context.app.source_dir)).to_s
+
+          opts[:sourcemap_filename] = ::Sass::Util.sourcemap_name(p)
+          # relative_path
+
+          @engine = ::Sass::Engine.new(data, opts)
 
           begin
-            @engine.render
+            if @context.is_a?(::Middleman::TemplateContext) && ext = @context.app.extensions[:source_maps]
+              output, sourcemap = @engine.render_with_sourcemap(File.basename(::Sass::Util.sourcemap_name(p)))
+
+              ext.record_sourcemap(
+                "/#{::Sass::Util.sourcemap_name(relative_path)}",
+                sourcemap
+              )
+              output
+            else
+              @engine.render
+            end
           rescue ::Sass::SyntaxError => e
             ::Sass::SyntaxError.exception_to_css(e, full_exception: true)
           end
