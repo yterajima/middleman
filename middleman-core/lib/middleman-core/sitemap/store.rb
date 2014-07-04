@@ -1,5 +1,4 @@
 # Used for merging results of metadata callbacks
-require 'active_support/core_ext/hash/deep_merge'
 require 'monitor'
 
 # Ignores
@@ -191,6 +190,8 @@ module Middleman
             newres
           end
 
+          @resources.freeze
+
           invalidate_resources_not_ignored_cache!
         end
       end
@@ -226,6 +227,38 @@ module Middleman
         end
 
         path
+      end
+
+      class Locked
+        attr_reader :resources
+
+        def initialize(resources)
+          @resources = resources
+
+          @_lookup_by_path = {}
+          @_lookup_by_destination_path = {}
+
+          @resources.each do |resource|
+            @_lookup_by_path[resource.path] = resource
+            @_lookup_by_destination_path[resource.destination_path] = resource
+          end
+        end
+
+        def find_resource_by_path(request_path)
+          request_path = ::Middleman::Util.normalize_path(request_path)
+          @_lookup_by_path[request_path]
+        end
+
+        # Find a resource given its destination path
+        # @param [String] request_path The destination (output) path of a resource.
+        # @return [Middleman::Sitemap::Resource]
+        def find_resource_by_destination_path(request_path)
+          request_path = ::Middleman::Util.normalize_path(request_path)
+          @_lookup_by_destination_path[request_path]
+        end
+
+        def ensure_resource_list_updated!
+        end
       end
     end
   end

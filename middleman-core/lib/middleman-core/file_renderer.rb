@@ -56,7 +56,7 @@ module Middleman
       options.delete(:layout)
 
       # Overwrite with frontmatter options
-      options = options.deep_merge(options[:renderer_options]) if options[:renderer_options]
+      options = options.merge(options[:renderer_options]) if options[:renderer_options]
 
       template_class = ::Tilt[path]
       # Allow hooks to manipulate the template before render

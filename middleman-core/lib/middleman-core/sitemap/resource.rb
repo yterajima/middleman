@@ -75,9 +75,9 @@ module Middleman
       Contract Hash => IsA['Middleman::Sitemap::Resource']
       def add_metadata(meta={})
         transform do
-          @options.deep_merge!(meta[:options]) if meta.key? :options
-          @locals.deep_merge!(meta[:locals]) if meta.key? :locals
-          @page.deep_merge!(meta[:page]) if meta.key? :page
+          @options.merge!(meta[:options]) if meta.key? :options
+          @locals.merge!(meta[:locals]) if meta.key? :locals
+          @page.merge!(meta[:page]) if meta.key? :page
         end
       end
 

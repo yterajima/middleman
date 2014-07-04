@@ -55,27 +55,48 @@ class Middleman::Extensions::AssetHash < ::Middleman::Extension
     # Process resources in order: binary images and fonts, then SVG, then JS/CSS.
     # This is so by the time we get around to the text files (which may reference
     # images and fonts) the static assets' hashes are already calculated.
-    resources.sort_by do |a|
-      if %w(.svg).include? a.ext
-        0
-      elsif %w(.js .css).include? a.ext
-        1
+    grouped = resources.each_with_object({ scripts: [], svgs: [], other: [] }) do |r, sum|
+      key = if %w(.js .css).include? r.ext
+        :scripts
+      elsif %w(.svg).include? r.ext
+        :svg
       else
-        -1
+        :other
       end
-    end.map(&method(:manipulate_single_resource))
+
+      sum[key] << r
+    end
+
+    grouped[:other] = grouped[:other].map { |r| manipulate_single_resource(r, @rack_client) }
+
+    other_and_svg = grouped[:other] + grouped[:svgs]
+
+    second_app = ::Middleman::Application do
+      @sitemap = ::Middleman::Sitemap::Store::Locked.new(other_and_svg)
+    end
+    second_client = ::Rack::MockRequest.new(::Middleman::Rack.new(second_app).to_app)
+    grouped[:svgs] = grouped[:svgs].map { |r| manipulate_single_resource(r, second_client) }
+
+    everything = grouped[:other] + grouped[:svgs] + grouped[:scripts]
+
+    third_app = ::Middleman::Application do
+      @sitemap = ::Middleman::Sitemap::Store::Locked.new(everything)
+    end
+    third_client = ::Rack::MockRequest.new(::Middleman::Rack.new(third_app).to_app)
+    grouped[:scripts] = grouped[:scripts].map { |r| manipulate_single_resource(r, third_client) }
+
+    grouped[:other] + grouped[:svgs] + grouped[:scripts]
   end
 
-  Contract IsA['Middleman::Sitemap::Resource'] => Maybe[IsA['Middleman::Sitemap::Resource']]
-  def manipulate_single_resource(resource)
+  Contract IsA['Middleman::Sitemap::Resource'], ::Rack::MockRequest => Maybe[IsA['Middleman::Sitemap::Resource']]
+  def manipulate_single_resource(resource, client)
     return resource unless options.exts.include?(resource.ext)
     return resource if ignored_resource?(resource)
     return resource if resource.ignored?
 
     # Render through the Rack interface so middleware and mounted apps get a shot
-    response = @rack_client.get(URI.escape(resource.destination_path),
-                                'bypass_inline_url_rewriter_asset_hash' => 'true'
-                                )
+    response = client.get(URI.escape(resource.destination_path),
+                          'bypass_inline_url_rewriter_asset_hash' => 'true')
 
     raise "#{resource.path} should be in the sitemap!" unless response.status == 200
 

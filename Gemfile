@@ -28,6 +28,8 @@ gem 'asciidoctor', '>= 0.1', require: false
 gem 'therubyrhino', '>= 2.0', platforms: :jruby
 gem 'therubyracer', '>= 0.12', platforms: :ruby
 
+gem 'hamster', github: 'hamstergem/hamster'
+
 # Code Quality
 gem 'rubocop', '~> 0.24', require: false
 gem 'simplecov', '0.7.1', require: false
