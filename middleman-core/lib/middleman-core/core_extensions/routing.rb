@@ -19,9 +19,13 @@ module Middleman
       # @return Array<Middleman::Sitemap::Resource>
       Contract ResourceList => ResourceList
       def manipulate_resource_list(resources)
-        resources.each do |resource|
-          @page_configs.each do |matcher, metadata|
-            resource.add_metadata(metadata) if Middleman::Util.path_match(matcher, "/#{resource.path}")
+        resources.map do |resource|
+          @page_configs.reduce(resource) do |r, (matcher, metadata)|
+            if Middleman::Util.path_match(matcher, "/#{resource.path}")
+              r.add_metadata(metadata)
+            else
+              r
+            end
           end
         end
       end

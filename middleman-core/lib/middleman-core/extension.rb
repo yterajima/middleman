@@ -33,10 +33,12 @@ module Middleman
   #       end
   #
   #       def manipulate_resource_list(resources)
-  #         resources.each do |resource|
+  #         resources.map do |resource|
   #           # Make all .jpg's get built or served with a .jpeg extension.
   #           if resource.ext == '.jpg'
-  #             resource.destination_path = resource.destination_path.sub('.jpg', '.jpeg')
+  #             resource.change_destination resource.destination_path.sub('.jpg', '.jpeg')
+  #           else
+  #             resource
   #           end
   #         end
   #       end

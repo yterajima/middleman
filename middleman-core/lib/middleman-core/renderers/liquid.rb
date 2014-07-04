@@ -15,11 +15,13 @@ module Middleman
       def manipulate_resource_list(resources)
         return resources unless app.extensions[:data]
 
-        resources.each do |resource|
-          next unless resource.source_file =~ %r{\.liquid$}
-
+        resources.map do |resource|
           # Convert data object into a hash for liquid
-          resource.add_metadata locals: { data: app.extensions[:data].data_store.to_h }
+          if resource.source_file =~ %r{\.liquid$}
+            resource.add_metadata locals: { data: app.extensions[:data].data_store.to_h }
+          else
+            resource
+          end
         end
       end
     end

@@ -40,24 +40,22 @@ module Middleman
         Contract ResourceList => ResourceList
         def manipulate_resource_list(resources)
           resources + @endpoints.map do |path, config|
-            r = EndpointResource.new(
+            EndpointResource.new(
               @app.sitemap,
               path,
-              config[:request_path]
+              config[:request_path],
+              config[:output]
             )
-            r.output = config[:output] if config.key?(:output)
-            r
           end
         end
       end
 
       class EndpointResource < ::Middleman::Sitemap::Resource
-        Contract None => Maybe[Proc]
-        attr_accessor :output
-
-        def initialize(store, path, request_path)
+        def initialize(store, path, request_path, output)
           super(store, path)
+
           @request_path = ::Middleman::Util.normalize_path(request_path)
+          @output = output
         end
 
         Contract None => String
@@ -70,7 +68,7 @@ module Middleman
 
         Contract Args[Any] => String
         def render(*)
-          return output.call if output
+          @output.call if @output
         end
 
         Contract None => Bool

@@ -53,7 +53,6 @@ module Middleman
             )
 
             p.add_metadata(config.metadata)
-            p
           end
         end
       end

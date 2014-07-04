@@ -3,6 +3,7 @@ require 'middleman-core/sitemap/extensions/traversal'
 require 'middleman-core/file_renderer'
 require 'middleman-core/template_renderer'
 require 'middleman-core/contracts'
+require 'hamster/immutable'
 
 module Middleman
   # Sitemap namespace
@@ -10,6 +11,7 @@ module Middleman
     # Sitemap Resource class
     class Resource
       include Contracts
+      include ::Hamster::Immutable
       include Middleman::Sitemap::Extensions::Traversal
 
       # The source path of this resource (relative to the source directory,
@@ -19,7 +21,7 @@ module Middleman
 
       # The output path in the build directory for this resource
       # @return [String]
-      attr_accessor :destination_path
+      attr_reader :destination_path
 
       # The on-disk source file for this resource, if there is one
       # @return [String]
@@ -46,10 +48,14 @@ module Middleman
         @destination_path = @path
 
         # Options are generally rendering/sitemap options
+        @options = {}
+
         # Locals are local variables for rendering this resource's template
+        @locals = {}
+
         # Page are data that is exposed through this resource's data member.
         # Note: It is named 'page' for backwards compatibility with older MM.
-        @metadata = { options: {}, locals: {}, page: {} }
+        @page = {}
       end
 
       # Whether this resource has a template file
@@ -66,9 +72,19 @@ module Middleman
       #   Locals are local variables for rendering this resource's template
       #   Page are data that is exposed through this resource's data member.
       #   Note: It is named 'page' for backwards compatibility with older MM.
-      Contract Hash => Hash
+      Contract Hash => IsA['Middleman::Sitemap::Resource']
       def add_metadata(meta={})
-        @metadata.deep_merge!(meta)
+        transform do
+          @options.deep_merge!(meta[:options]) if meta.key? :options
+          @locals.deep_merge!(meta[:locals]) if meta.key? :locals
+          @page.deep_merge!(meta[:page]) if meta.key? :page
+        end
+      end
+
+      def change_destination(path)
+        transform do
+          @destination_path = path
+        end
       end
 
       # Data about this resource, populated from frontmatter or extensions.
@@ -76,23 +92,16 @@ module Middleman
       Contract None => IsA['Middleman::Util::HashWithIndifferentAccess']
       def data
         # TODO: Should this really be a HashWithIndifferentAccess?
-        ::Middleman::Util.recursively_enhance(metadata[:page]).freeze
+        ::Middleman::Util.recursively_enhance(@page.dup).freeze
       end
 
-      # Options about how this resource is rendered, such as its :layout,
-      # :renderer_options, and whether or not to use :directory_indexes.
-      # @return [Hash]
       Contract None => Hash
-      def options
-        metadata[:options]
-      end
+      attr_reader :options
 
       # Local variable mappings that are used when rendering the template for this resource.
       # @return [Hash]
       Contract None => Hash
-      def locals
-        metadata[:locals]
-      end
+      attr_reader :locals
 
       # Extension of the path (i.e. '.js')
       # @return [String]
@@ -110,9 +119,8 @@ module Middleman
         relative_source = Pathname(source_file).relative_path_from(Pathname(@app.root))
 
         ::Middleman::Util.instrument 'render.resource', path: relative_source, destination_path: destination_path do
-          md   = metadata
-          opts = md[:options].deep_merge(opts)
-          locs = md[:locals].deep_merge(locs)
+          opts = @options.deep_merge(opts)
+          locs = @locals.deep_merge(locs)
           locs[:current_path] ||= destination_path
 
           # Certain output file types don't use layouts
@@ -149,9 +157,11 @@ module Middleman
       # Ignore a resource directly, without going through the whole
       # ignore filter stuff.
       # @return [void]
-      Contract None => Any
+      # Contract None => IsA['Middleman::Sitemap::Resource']
       def ignore!
-        @ignored = true
+        transform do
+          @ignored = true
+        end
       end
 
       # Whether the Resource is ignored

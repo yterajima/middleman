@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency('tilt', ['~> 1.4.1'])
   s.add_dependency('erubis')
   s.add_dependency('hooks', ['~> 0.3'])
+  s.add_dependency('hamster')
 
   # Helpers
   s.add_dependency('activesupport', ['~> 4.1.0'])

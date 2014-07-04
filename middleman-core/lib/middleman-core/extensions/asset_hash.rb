@@ -63,14 +63,14 @@ class Middleman::Extensions::AssetHash < ::Middleman::Extension
       else
         -1
       end
-    end.each(&method(:manipulate_single_resource))
+    end.map(&method(:manipulate_single_resource))
   end
 
   Contract IsA['Middleman::Sitemap::Resource'] => Maybe[IsA['Middleman::Sitemap::Resource']]
   def manipulate_single_resource(resource)
-    return unless options.exts.include?(resource.ext)
-    return if ignored_resource?(resource)
-    return if resource.ignored?
+    return resource unless options.exts.include?(resource.ext)
+    return resource if ignored_resource?(resource)
+    return resource if resource.ignored?
 
     # Render through the Rack interface so middleware and mounted apps get a shot
     response = @rack_client.get(URI.escape(resource.destination_path),
@@ -81,8 +81,7 @@ class Middleman::Extensions::AssetHash < ::Middleman::Extension
 
     digest = Digest::SHA1.hexdigest(response.body)[0..7]
 
-    resource.destination_path = resource.destination_path.sub(/\.(\w+)$/) { |ext| "-#{digest}#{ext}" }
-    resource
+    resource.change_destination resource.destination_path.sub(/\.(\w+)$/) { |ext| "-#{digest}#{ext}" }
   end
 
   Contract IsA['Middleman::Sitemap::Resource'] => Bool

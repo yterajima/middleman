@@ -32,13 +32,12 @@ module Middleman
         Contract ResourceList => ResourceList
         def manipulate_resource_list(resources)
           resources + @redirects.map do |path, opts|
-            r = RedirectResource.new(
+            RedirectResource.new(
               @app.sitemap,
               path,
-              opts[:to]
+              opts[:to],
+              opts[:template]
             )
-            r.output = opts[:template] if opts[:template]
-            r
           end
         end
       end
@@ -47,10 +46,11 @@ module Middleman
         Contract None => Maybe[Proc]
         attr_accessor :output
 
-        def initialize(store, path, target)
-          @request_path = target
-
+        def initialize(store, path, target, output)
           super(store, path)
+
+          @request_path = target
+          @output = output
         end
 
         Contract None => Bool
@@ -65,8 +65,8 @@ module Middleman
                                           find_resource: true
           )
 
-          if output
-            output.call(path, url)
+          if @output
+            @output.call(path, url)
           else
             <<-END
               <html>

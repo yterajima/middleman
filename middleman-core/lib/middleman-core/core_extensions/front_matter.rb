@@ -34,28 +34,30 @@ module Middleman::CoreExtensions
     # @return Array<Middleman::Sitemap::Resource>
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
-      resources.each do |resource|
-        next if resource.source_file.blank?
+      resources.map(&method(:manipulate_single_resource))
+    end
 
-        fmdata = data(resource.source_file).first.dup
+    def manipulate_single_resource(resource)
+      return resource if resource.source_file.blank?
 
-        # Copy over special options
-        # TODO: Should we make people put these under "options" instead of having
-        # special known keys?
-        opts = fmdata.extract!(:layout, :layout_engine, :renderer_options, :directory_index, :content_type)
-        opts[:renderer_options].symbolize_keys! if opts.key?(:renderer_options)
+      fmdata = data(resource.source_file).first.dup
 
-        ignored = fmdata.delete(:ignored)
+      # Copy over special options
+      # TODO: Should we make people put these under "options" instead of having
+      # special known keys?
+      opts = fmdata.extract!(:layout, :layout_engine, :renderer_options, :directory_index, :content_type)
+      opts[:renderer_options].symbolize_keys! if opts.key?(:renderer_options)
 
-        # TODO: Enhance data? NOOOO
-        # TODO: stringify-keys? immutable/freeze?
+      ignored = fmdata.delete(:ignored)
 
-        resource.add_metadata options: opts, page: fmdata
+      # TODO: Enhance data? NOOOO
+      # TODO: stringify-keys? immutable/freeze?
 
-        resource.ignore! if ignored == true && !resource.is_a?(::Middleman::Sitemap::ProxyResource)
-
-        # TODO: Save new template here somewhere?
-      end
+      resource = resource.add_metadata options: opts, page: fmdata
+      resource = resource.ignore! if ignored == true && !resource.is_a?(::Middleman::Sitemap::ProxyResource)
+      
+      # TODO: Save new template here somewhere?
+      resource
     end
 
     # Get the template data from a path

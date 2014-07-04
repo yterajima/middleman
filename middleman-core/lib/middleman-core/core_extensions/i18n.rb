@@ -54,7 +54,7 @@ class Middleman::CoreExtensions::Internationalization < ::Middleman::Extension
   def manipulate_resource_list(resources)
     new_resources = []
 
-    resources.each do |resource|
+    resources.map do |resource|
       # If it uses file extension localization
       if parse_locale_extension(resource.path)
         result = parse_locale_extension(resource.path)
@@ -72,12 +72,12 @@ class Middleman::CoreExtensions::Internationalization < ::Middleman::Extension
 
       # This is for backwards compatibility with the old provides_metadata-based code
       # that used to be in this extension, but I don't know how much sense it makes.
-      next if resource.options[:lang]
-
-      resource.add_metadata options: { lang: @mount_at_root }, locals: { lang: @mount_at_root }
-    end
-
-    resources + new_resources
+      if resource.options[:lang]
+        resource
+      else
+        resource.add_metadata options: { lang: @mount_at_root }, locals: { lang: @mount_at_root }
+      end
+    end + new_resources
   end
 
   private
@@ -142,6 +142,7 @@ class Middleman::CoreExtensions::Internationalization < ::Middleman::Extension
     old_locale = ::I18n.locale
     ::I18n.locale = lang
     localized_page_id = ::I18n.t("paths.#{page_id}", default: page_id, fallback: [])
+    ::I18n.locale = old_locale
 
     prefix = if (options[:mount_at_root] == lang) || (options[:mount_at_root].nil? && langs[0] == lang)
       '/'
@@ -159,8 +160,5 @@ class Middleman::CoreExtensions::Internationalization < ::Middleman::Extension
 
     p = ::Middleman::Sitemap::ProxyResource.new(app.sitemap, path, source_path)
     p.add_metadata locals: { lang: lang, page_id: path }, options: { lang: lang }
-
-    ::I18n.locale = old_locale
-    p
   end
 end
