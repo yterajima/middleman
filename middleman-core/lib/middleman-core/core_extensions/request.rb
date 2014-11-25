@@ -3,7 +3,7 @@ require 'rack'
 require 'rack/file'
 require 'rack/lint'
 require 'rack/head'
-
+require 'monitor'
 require 'middleman-core/util'
 
 module Middleman
@@ -200,7 +200,15 @@ module Middleman
 
           # Catch :halt exceptions and use that response if given
           catch(:halt) do
-            process_request(env, req, res)
+            @lock ||= Monitor.new
+
+            if development?
+              @lock.synchronize do
+                process_request(env, req, res)
+              end
+            else
+              process_request(env, req, res)
+            end
 
             res.status = 404
 
