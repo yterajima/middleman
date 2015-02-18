@@ -59,6 +59,7 @@ Feature: Middleman CLI
   Scenario: Create a new project using Middleman directory
     When I run `middleman init MY_PROJECT -T amicus`
     Then a directory named "MY_PROJECT" should exist
+    Then the output should contain "aaaaaaaaaaaaaaaaaaaaa"
     When I cd to "MY_PROJECT"
     Then the file "README.md" should contain "Amicus"
     And the file ".gitignore" should not exist
