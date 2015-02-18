@@ -94,4 +94,5 @@ Feature: Middleman CLI
     And I type "y"
     And I type "y"
     And I type "y"
+    Then the output should contain "aaaaaaaaaaaaaaaaaaa"
     Then a directory named "MY_PROJECT" should exist
