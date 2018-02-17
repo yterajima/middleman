@@ -27,8 +27,7 @@ else
       base.extend self
     end
 
-    # rubocop:disable MethodName
-    def Contract(*); end
+    def Contract(*); end # rubocop:disable MethodName
 
     class Callable
       def self.[](*); end

@@ -337,3 +337,4 @@ module Middleman
     end
   end
 end
+# rubocop:enable GlobalVars

@@ -310,3 +310,4 @@ module Middleman
     memoize :path_match
   end
 end
+# rubocop:enable ModuleLength
