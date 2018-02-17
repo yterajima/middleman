@@ -43,9 +43,9 @@ module Middleman
 
         app.logger.debug %(== Server information is provided by #{server_information.handler})
         app.logger.debug %(== The Middleman is running in "#{environment}" environment)
-        app.logger.debug format('== The Middleman preview server is bound to %s', ServerUrl.new(hosts: server_information.listeners, port: server_information.port, https: server_information.https?).to_bind_addresses.join(', '))
-        app.logger.info format('== View your site at %s', ServerUrl.new(hosts: server_information.site_addresses, port: server_information.port, https: server_information.https?).to_urls.join(', '))
-        app.logger.info format('== Inspect your site configuration at %s', ServerUrl.new(hosts: server_information.site_addresses, port: server_information.port, https: server_information.https?).to_config_urls.join(', '))
+        app.logger.debug format('== The Middleman preview server is bound to %<url>s', url: ServerUrl.new(hosts: server_information.listeners, port: server_information.port, https: server_information.https?).to_bind_addresses.join(', '))
+        app.logger.info format('== View your site at %<url>s', url: ServerUrl.new(hosts: server_information.site_addresses, port: server_information.port, https: server_information.https?).to_urls.join(', '))
+        app.logger.info format('== Inspect your site configuration at %<url>s', url: ServerUrl.new(hosts: server_information.site_addresses, port: server_information.port, https: server_information.https?).to_config_urls.join(', '))
 
         @initialized ||= false
         return if @initialized
@@ -185,7 +185,7 @@ module Middleman
                                server_name: possible_from_cli(:server_name, app.config),
                                https: possible_from_cli(:https, app.config))
 
-        app.logger.warn format('== The Middleman uses a different port "%s" then the configured one "%s" because some other server is listening on that port.', server_information.port, configured_port) unless server_information.port == configured_port
+        app.logger.warn format('== The Middleman uses a different port "%<port>s" then the configured one "%<configured_port>s" because some other server is listening on that port.', port: server_information.port, configured_port: configured_port) unless server_information.port == configured_port
 
         @environment = possible_from_cli(:environment, app.config)
 
