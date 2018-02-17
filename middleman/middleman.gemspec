@@ -18,10 +18,10 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.required_ruby_version = '>= 2.2.0'
 
-  s.add_dependency('middleman-core', Middleman::VERSION)
-  s.add_dependency('middleman-cli', Middleman::VERSION)
-  s.add_dependency('sass', ['>= 3.4.0', '< 4.0'])
-  s.add_dependency('haml', ['>= 4.0.5'])
   s.add_dependency('coffee-script', ['~> 2.2'])
+  s.add_dependency('haml', ['>= 4.0.5'])
   s.add_dependency('kramdown', ['~> 1.2'])
+  s.add_dependency('middleman-cli', Middleman::VERSION)
+  s.add_dependency('middleman-core', Middleman::VERSION)
+  s.add_dependency('sass', ['>= 3.4.0', '< 4.0'])
 end

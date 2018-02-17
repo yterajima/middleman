@@ -20,18 +20,18 @@ Gem::Specification.new do |s|
 
   # Core
   s.add_dependency('bundler', ['~> 1.1'])
-  s.add_dependency('rack', ['>= 1.4.5', '< 3'])
-  s.add_dependency('tilt', ['~> 2.0'])
+  s.add_dependency('dotenv')
   s.add_dependency('erubis')
   s.add_dependency('parallel')
+  s.add_dependency('rack', ['>= 1.4.5', '< 3'])
   s.add_dependency('servolux')
-  s.add_dependency('dotenv')
+  s.add_dependency('tilt', ['~> 2.0'])
 
   # Helpers
   s.add_dependency('activesupport', ['>= 4.2', '< 5.2'])
-  s.add_dependency('padrino-helpers', ['~> 0.13.0'])
   s.add_dependency('addressable', ['~> 2.3'])
   s.add_dependency('memoist', ['~> 0.14'])
+  s.add_dependency('padrino-helpers', ['~> 0.13.0'])
 
   # Watcher
   s.add_dependency('listen', ['~> 3.0'])
@@ -49,13 +49,13 @@ Gem::Specification.new do |s|
   s.add_dependency('sass', ['>= 3.4'])
 
   # Minify JS
-  s.add_dependency('uglifier', ['~> 3.0'])
   s.add_dependency('execjs', ['~> 2.0'])
+  s.add_dependency('uglifier', ['~> 3.0'])
 
   # Testing
   s.add_dependency('contracts', ['~> 0.13'])
 
   # Hash stuff
-  s.add_dependency('hashie', ['~> 3.4'])
   s.add_dependency('hamster', ['~> 3.0'])
+  s.add_dependency('hashie', ['~> 3.4'])
 end
