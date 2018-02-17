@@ -17,6 +17,11 @@ AllCops:
     - 'middleman-cli/fixtures/**/*'
     - 'middleman-cli/features/**/*'
     - 'middleman-cli/spec/**/*'
+FileName:
+  Exclude:
+    - '*/*.gemspec'
+    - 'middleman-core/lib/middleman-core.rb'
+    - 'middleman-cli/lib/middleman-cli.rb'
 DoubleNegation:
   Enabled: false
 LineLength:
