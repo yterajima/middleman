@@ -141,7 +141,7 @@ module Middleman
       if relative_dir
         lookup_stack.push [relative_dir.to_s,
                            { preferred_engine: resource.file_descriptor[:relative_path]
-                             .extname[1..-1].to_sym }]
+                                                       .extname[1..-1].to_sym }]
       end
       lookup_stack.push [non_root]
       lookup_stack.push [non_root,

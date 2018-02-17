@@ -10,8 +10,8 @@ class Middleman::Extensions::MinifyCss < ::Middleman::Extension
     require 'sass'
     SassCompressor
   }, 'Set the CSS compressor to use.'
-  option :content_types, %w(text/css), 'Content types of resources that contain CSS'
-  option :inline_content_types, %w(text/html text/php), 'Content types of resources that contain inline CSS'
+  option :content_types, %w[text/css], 'Content types of resources that contain CSS'
+  option :inline_content_types, %w[text/html text/php], 'Content types of resources that contain inline CSS'
 
   def ready
     # Setup Rack middleware to minify CSS

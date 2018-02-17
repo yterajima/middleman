@@ -5,7 +5,6 @@ module Middleman
   class << self
     def setup_load_paths
       @_is_setup ||= begin
-
         # Only look for config.rb if MM_ROOT isn't set
         if !ENV['MM_ROOT'] && (found_path = findup('config.rb'))
           ENV['MM_ROOT'] = found_path

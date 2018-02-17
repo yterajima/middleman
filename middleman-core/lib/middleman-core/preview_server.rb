@@ -217,7 +217,7 @@ module Middleman
       # Trap some interupt signals and shut down smoothly
       # @return [void]
       def register_signal_handlers
-        %w(INT HUP TERM QUIT).each do |sig|
+        %w[INT HUP TERM QUIT].each do |sig|
           next unless Signal.list[sig]
 
           Signal.trap(sig) do
@@ -250,8 +250,8 @@ module Middleman
           else
             # use a generated self-signed cert
             http_opts[:SSLCertName] = [
-              %w(CN localhost),
-              %w(CN #{host})
+              %w[CN localhost],
+              %W[CN #{host}]
             ].uniq
             cert, key = create_self_signed_cert(1024, [['CN', server_information.server_name]], server_information.site_addresses, 'Middleman Preview Server')
             http_opts[:SSLCertificate] = cert

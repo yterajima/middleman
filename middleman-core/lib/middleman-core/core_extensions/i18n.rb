@@ -190,7 +190,7 @@ class Middleman::CoreExtensions::Internationalization < ::Middleman::Extension
 
       # Process templates with locale suffix
       locales.each do |locale|
-        abs_path = abs_path.sub(".#{locale}.", ".")
+        abs_path = abs_path.sub(".#{locale}.", '.')
       end
 
       sum[abs_path] ||= {}

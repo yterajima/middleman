@@ -23,7 +23,6 @@ module Middleman
       @binary_cache[filename] = begin
         path = Pathname(filename)
         ext = path.extname
-
         # We hardcode detecting of gzipped SVG files
         if ext == '.svgz'
           true
@@ -31,7 +30,6 @@ module Middleman
           false
         else
           dot_ext = ext.to_s[0] == '.' ? ext.dup : ".#{ext}"
-
           if mime = ::Rack::Mime.mime_type(dot_ext, nil)
             !nonbinary_mime?(mime)
           else

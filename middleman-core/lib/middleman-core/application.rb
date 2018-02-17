@@ -158,11 +158,11 @@ module Middleman
 
     # Which file extensions have a layout by default.
     # @return [Array.<String>]
-    define_setting :extensions_with_layout, %w(.htm .html .xhtml .php), 'Which file extensions have a layout by default.'
+    define_setting :extensions_with_layout, %w[.htm .html .xhtml .php], 'Which file extensions have a layout by default.'
 
     # Which file extensions are "assets."
     # @return [Array.<String>]
-    define_setting :asset_extensions, %w(.css .png .jpg .jpeg .webp .svg .svgz .js .gif .ttf .otf .woff .woff2 .eot .ico .map), 'Which file extensions are treated as assets.'
+    define_setting :asset_extensions, %w[.css .png .jpg .jpeg .webp .svg .svgz .js .gif .ttf .otf .woff .woff2 .eot .ico .map], 'Which file extensions are treated as assets.'
 
     # Default string encoding for templates and output.
     # @return [String]
@@ -180,18 +180,15 @@ module Middleman
       # Files starting with an underscore, but not a double-underscore
       partials: proc do |file|
         ignored = false
-
         file[:relative_path].ascend do |f|
           if f.basename.to_s =~ %r{^_[^_]}
             ignored = true
             break
           end
         end
-
         ignored
       end,
-
-      layout: ->(file, app) {
+      layout: lambda { |file, app|
         file[:relative_path].to_s.start_with?('layout.', app.config[:layouts_dir] + '/')
       }
     }, 'Callbacks that can exclude paths from the sitemap'

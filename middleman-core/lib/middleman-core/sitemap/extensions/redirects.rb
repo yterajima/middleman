@@ -58,7 +58,7 @@ module Middleman
           if output
             output.call(path, url)
           else
-            <<-END
+            <<-HTML
               <html>
                 <head>
                   <link rel="canonical" href="#{url}" />
@@ -69,7 +69,7 @@ module Middleman
                 <body>
                 </body>
               </html>
-            END
+            HTML
           end
         end
 

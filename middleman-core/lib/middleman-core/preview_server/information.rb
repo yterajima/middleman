@@ -241,7 +241,7 @@ module Middleman
       end
 
       def self.matches?(opts={})
-        !opts[:bind_address].blank? && !opts[:server_name].blank? && !%w(:: 0.0.0.0).include?(opts[:bind_address])
+        !opts[:bind_address].blank? && !opts[:server_name].blank? && !%w[:: 0.0.0.0].include?(opts[:bind_address])
       end
 
       def resolve_me(*); end
