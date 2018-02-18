@@ -14,7 +14,7 @@ module Middleman
     def extract_response_text(response)
       # The rack spec states all response bodies must respond to each
       result = ''
-      response.each_key do |part|
+      response.each do |part, _| # rubocop:disable Performance/HashEachMethods
         result << part
       end
       result
