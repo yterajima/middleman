@@ -95,9 +95,9 @@ class Middleman::Extensions::Lorem < ::Middleman::Extension
       # @param [String] fmt
       # @return [String]
       def date(fmt='%a %b %d, %Y')
-        y = rand(20) + 1990
-        m = rand(12) + 1
-        d = rand(31) + 1
+        y = rand(1990..2010)
+        m = rand(1..12)
+        d = rand(1..31)
         Time.local(y, m, d).strftime(fmt)
       end
 
