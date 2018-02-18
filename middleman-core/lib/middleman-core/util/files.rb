@@ -84,7 +84,7 @@ module Middleman
     # @return [String]
     Contract String => ArrayOf[String]
     def collect_extensions(path)
-      @@extensions_cache ||= {}
+      @@extensions_cache ||= {} # rubocop:disable Style/ClassVars
 
       base_name = ::File.basename(path)
       @@extensions_cache[base_name] ||= begin
