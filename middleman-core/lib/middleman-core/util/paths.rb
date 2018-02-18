@@ -33,7 +33,7 @@ module Middleman
     Contract String => String
     def normalize_path(path)
       # The tr call works around a bug in Ruby's Unicode handling
-      ::URI.decode(path).sub(%r{^/}, '').tr('', '')
+      ::CGI.unescape(path).sub(%r{^/}, '').tr('', '')
     end
     memoize :normalize_path
 

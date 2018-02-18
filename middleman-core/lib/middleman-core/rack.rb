@@ -86,7 +86,7 @@ module Middleman
     def process_request(env, req, res)
       start_time = Time.now
 
-      request_path = URI.decode(env['PATH_INFO'].dup)
+      request_path = CGI.unescape(env['PATH_INFO'].dup)
       if request_path.respond_to? :force_encoding
         request_path.force_encoding('UTF-8')
       end

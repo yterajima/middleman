@@ -84,7 +84,7 @@ class Middleman::Extensions::AssetHash < ::Middleman::Extension
     else
       # Render through the Rack interface so middleware and mounted apps get a shot
       response = @rack_client.get(
-        ::URI.escape(resource.destination_path),
+        ::CGI.escape(resource.destination_path),
         'bypass_inline_url_rewriter_asset_hash' => 'true'
       )
 
