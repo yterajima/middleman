@@ -170,7 +170,7 @@ module Middleman
     # @return [Middleman::Sources]
     Contract Symbol => ::Middleman::Sources
     def by_type(type)
-      self.class.new @app, nil, watchers.select { |d| d.type == type }
+      self.class.new(@app, nil, watchers.select { |d| d.type == type })
     end
 
     # Get all files for this collection of watchers.
