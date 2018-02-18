@@ -15,7 +15,7 @@ module Listen
       #   return true unless only_patterns.any? { |pattern| path =~ pattern }
       # end
 
-      return !only_patterns.any? { |pattern| path =~ pattern } if only_patterns
+      return only_patterns.none? { |pattern| path =~ pattern } if only_patterns
 
       ignore_patterns.any? { |pattern| path =~ pattern }
     end
