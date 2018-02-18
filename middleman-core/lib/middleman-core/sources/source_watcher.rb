@@ -363,10 +363,9 @@ module Middleman
 
       yield
 
-      if listener_running
-        poll_once!
-        listen!
-      end
+      return unless listener_running
+      poll_once!
+      listen!
     end
   end
 end

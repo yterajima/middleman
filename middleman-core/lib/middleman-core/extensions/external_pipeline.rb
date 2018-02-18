@@ -40,12 +40,11 @@ class Middleman::Extensions::ExternalPipeline < ::Middleman::Extension
   end
 
   def reload!
-    if @current_thread
-      logger.info "== Stopping: `#{options[:command]}`"
+    return unless @current_thread
+    logger.info "== Stopping: `#{options[:command]}`"
 
-      @current_thread.stop
-      @current_thread = nil
-    end
+    @current_thread.stop
+    @current_thread = nil
   end
 
   def watch_command!(async)

@@ -29,12 +29,11 @@ module Middleman
         ENV['BUNDLE_GEMFILE'] = File.expand_path('../../../../Gemfile', __FILE__)
       end
 
-      if File.exist?(ENV['BUNDLE_GEMFILE'])
-        require 'bundler/setup'
-        Bundler.require
-      else
-        raise "Couldn't find your Gemfile. Middleman projects require a Gemfile for specifying dependencies."
-      end
+      msg = "Couldn't find your Gemfile. Middleman projects require a Gemfile for specifying dependencies."
+      raise msg unless File.exist?(ENV['BUNDLE_GEMFILE'])
+
+      require 'bundler/setup'
+      Bundler.require
     end
 
     # Recursive method to find a file in parent directories
