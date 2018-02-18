@@ -14,7 +14,7 @@ module Middleman
     def extract_response_text(response)
       # The rack spec states all response bodies must respond to each
       result = ''
-      response.each do |part, _|
+      response.each_key do |part|
         result << part
       end
       result

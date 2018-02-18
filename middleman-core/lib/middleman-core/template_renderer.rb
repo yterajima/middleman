@@ -131,7 +131,7 @@ module Middleman
       # Add extension helpers to context.
       @app.extensions.add_exposed_to_context(context)
 
-      locals.each do |k, _|
+      locals.each_key do |k|
         next unless context.respond_to?(k) && !%i[current_path paginate page_articles blog_controller lang locale data].include?(k.to_sym)
 
         msg = "Template local `#{k}` tried to overwrite an existing context value. Please rename the key when passing to `locals`"

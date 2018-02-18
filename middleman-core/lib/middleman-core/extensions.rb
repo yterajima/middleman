@@ -122,7 +122,7 @@ module Middleman
       end
 
       def load_settings(app)
-        registered.each do |name, _|
+        registered.each_key do |name|
           begin
             ext = load(name)
             unless ext.global_config.all_settings.empty?
