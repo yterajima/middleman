@@ -35,7 +35,7 @@ module Middleman
 
         # And now comes the check
         unless server_information.valid?
-          $stderr.puts %(== Running Middleman failed: #{server_information.reason}. Please fix that and try again.)
+          warn %(== Running Middleman failed: #{server_information.reason}. Please fix that and try again.)
           exit 1
         end
 
@@ -108,7 +108,7 @@ module Middleman
         begin
           app = initialize_new_app
         rescue => e
-          $stderr.puts "Error reloading Middleman: #{e}\n#{e.backtrace.join("\n")}"
+          warn "Error reloading Middleman: #{e}\n#{e.backtrace.join("\n")}"
           app.logger.info '== The Middleman is still running the application from before the error'
           return
         end
@@ -269,7 +269,7 @@ module Middleman
           ::WEBrick::HTTPServer.new(http_opts)
         rescue Errno::EADDRINUSE
           port = http_opts[:Port]
-          $stderr.puts %(== Port #{port} is already in use. This could mean another instance of middleman is already running. Please make sure port #{port} is free and start `middleman server` again, or choose another port by running `middleman server —-port=#{port + 1}` instead.)
+          warn %(== Port #{port} is already in use. This could mean another instance of middleman is already running. Please make sure port #{port} is free and start `middleman server` again, or choose another port by running `middleman server —-port=#{port + 1}` instead.)
         end
       end
 
