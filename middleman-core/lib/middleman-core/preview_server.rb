@@ -91,7 +91,7 @@ module Middleman
       def stop
         begin
           app.logger.info '== The Middleman is shutting down'
-        rescue
+        rescue StandardError
           # if the user closed their terminal STDOUT/STDERR won't exist
         end
 
@@ -107,7 +107,7 @@ module Middleman
 
         begin
           app = initialize_new_app
-        rescue => e
+        rescue StandardError => e
           warn "Error reloading Middleman: #{e}\n#{e.backtrace.join("\n")}"
           app.logger.info '== The Middleman is still running the application from before the error'
           return

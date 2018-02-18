@@ -52,7 +52,7 @@ module Middleman
         # Avoid weird race condition when a file is renamed
         begin
           content = file.read
-        rescue EOFError, IOError, ::Errno::ENOENT
+        rescue StandardError
           return [{}, nil]
         end
 
@@ -113,7 +113,7 @@ module Middleman
           ::YAML.load(content)
         end
         c ? symbolize_recursive(c) : {}
-      rescue StandardError, ::Psych::SyntaxError => error
+      rescue StandardError => error
         warn "YAML Exception parsing #{full_path}: #{error.message}"
         {}
       end

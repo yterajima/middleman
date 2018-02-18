@@ -239,7 +239,7 @@ module Middleman
               return false
             end
           end
-        rescue => e
+        rescue StandardError => e
           trigger(:error, output_file, "#{e}\n#{e.backtrace.join("\n")}")
           return false
         end

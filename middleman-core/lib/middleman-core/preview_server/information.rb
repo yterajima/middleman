@@ -265,7 +265,7 @@ module Middleman
         ip = IPAddr.new(opts[:server_name])
 
         ip.ipv4? || ip.ipv6?
-      rescue
+      rescue StandardError
         false
       end
     end
