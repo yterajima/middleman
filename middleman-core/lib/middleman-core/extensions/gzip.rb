@@ -24,7 +24,6 @@ class Middleman::Extensions::Gzip < ::Middleman::Extension
     require 'zlib'
     require 'stringio'
     require 'find'
-    require 'thread'
   end
 
   def after_build(builder)
