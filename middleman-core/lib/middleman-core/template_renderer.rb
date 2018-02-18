@@ -41,7 +41,7 @@ module Middleman
       layout_file = resolve_template(app, File.join(app.config[:layouts_dir], name.to_s), resolve_opts)
 
       # If we didn't find it, check root
-      layout_file = resolve_template(app, name, resolve_opts) unless layout_file
+      layout_file ||= resolve_template(app, name, resolve_opts)
 
       # Return the path
       layout_file
